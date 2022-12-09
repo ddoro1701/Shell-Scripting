@@ -4,21 +4,24 @@
 
 function hauptmenu(){
 	clear
-	echo
-	echo "   Hauptmenu:"
-	echo 
-	echo "      Backup erstellen       (b)"
-	echo "      Backup zurückspielen   (r)"
-	echo "      Backupinhalt anzeigen  (s)"
-	echo "      Backup löschen         (d)"
-	echo "      Exit                   (x)"
-	echo
-	read -p "      Eingabe: " EINGABE
+	kdialog
+choice=$(kdialog --separate-output --checklist "Hauptmenü" 1 "Backup erstellen      (b)" off 2  "Backup zurückspielen   (r)" off 3 "Backupinhalt anzeigen  (s)" off 4 "Backupinhalt anzeigen (s)" off 5 "Backup löschen     (d)" off 6 "Exit   (x)");
+
+#!if [ "$?" = 0 ]; //then
+#	kdialog --msgbox "$choice";
+#if [ "$?" = 1 ]; then
+#	kdialog --sorry "YOU CHOSE CANCEL";
+#else
+#	kdialog --error "ERROR";
+#fi;
+	#read -p "      Eingabe: " EINGABE
 }
 
 function backup(){
-	YN=N
-	until [ "$YN" = "y" -o "$YN" = "Y" ]; do
+    //kdialog --yesno "HELLO WORLD"
+
+	//YN=$(echo $?)
+	until [ "$YN" = "0" ]; do
 		compress
 		echo "         Sie wählten $METHODE"
 		read -p "         Sind Sie sicher (y|n): " YN
@@ -154,22 +157,27 @@ function backupContent(){
 while :
 do
 	hauptmenu
-	case $EINGABE in
-		b|B)
+	case $choice in
+		1)
 			backup
 			;;
-		r|R)
+		2)
 			backuprestore
 			;;
-		s|S)
+		3)
 			backuplist
 			;;
-		d|D)
+		4)
+			backupdelete
+			;;
+		5)
+			backupdelete
+			;;
+		6)
 			backupdelete
 			;;
 		*)
-			echo
-			echo "      Und Tschüss"
+			kdialog --continue-label "Auf Wiedersehen"
 			exit
 	esac
 done
